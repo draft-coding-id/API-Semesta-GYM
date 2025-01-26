@@ -1,0 +1,139 @@
+const User = require('../models/User');
+const Trainer = require('../models/Trainer');
+const TrainingFocus = require('../models/TrainingFocus');
+const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
+const TrainerTrainingFocus = require('../models/TrainerTrainingFocus');
+const { use } = require('../routes/authRoutes');
+
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  });
+};
+
+exports.getAllTrainers = async (req, res) => {
+  try {
+    const trainers = await Trainer.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email']
+        },
+        {
+          model: TrainingFocus,
+          attributes: ['id', 'name', 'picture']
+        }
+      ]
+    });
+
+    res.json(trainers);
+  } catch (error) {
+    console.error('Error fetching trainers:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.getTrainerById = async (req, res) => {
+  try {
+    const trainer = await Trainer.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email']
+        },
+        {
+          model: TrainingFocus,
+          attributes: ['id', 'name', 'picture']
+        }
+      ]
+    });
+
+    if (!trainer) {
+      return res.status(404).json({ error: 'Trainer not found' });
+    }
+
+    res.json(trainer);
+  } catch (error) {
+    console.error('Error fetching trainer:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.registerTrainer = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { 
+      name, 
+      email, 
+      password, 
+      trainingFocus, 
+      description, 
+      hoursOfPractice, 
+      price 
+    } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Create user with trainer role
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: 'trainer'
+    });
+
+    // Create trainer profile
+    const trainer = await Trainer.create({
+      userId: user.id,
+      description,
+      hoursOfPractice,
+      price,
+      picture: req.file ? 'uploads/' + req.file.filename : null
+    });
+
+    // Add training focus
+    // await trainer.addTrainingFocus(trainingFocus);
+    const trainingFocusIds = trainingFocus.map(id => ({ trainer_id: trainer.id, training_focus_id: id }));
+    await TrainerTrainingFocus.bulkCreate(trainingFocusIds);
+
+    const token = generateToken(user.id);
+
+    res.status(201).json({
+      message: 'Trainer registered successfully',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        trainer: {
+          id: trainer.id,
+          trainingFocusId: trainer.trainingFocusId,
+          description: trainer.description,
+          hoursOfPractice: trainer.hoursOfPractice,
+          price: trainer.price,
+          picture: trainer.picture
+        },
+        trainingFocus: trainingFocusIds
+      }
+    });
+  } catch (error) {
+    if (trainer) {
+      await trainer.destroy();
+    }
+    if (user) {
+      await user.destroy();
+    }
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
