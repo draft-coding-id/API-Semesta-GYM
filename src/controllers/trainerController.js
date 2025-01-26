@@ -18,7 +18,7 @@ exports.getAllTrainers = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: TrainingFocus,
@@ -36,11 +36,11 @@ exports.getAllTrainers = async (req, res) => {
 
 exports.getTrainerById = async (req, res) => {
   try {
-    const trainer = await Trainer.findByPk(req.params.id, {
+    const trainer = await Trainer.findByPk(req.params.id , {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: TrainingFocus,
@@ -71,6 +71,7 @@ exports.registerTrainer = async (req, res) => {
       name, 
       email, 
       password, 
+      phone,
       trainingFocus, 
       description, 
       hoursOfPractice, 
@@ -88,7 +89,8 @@ exports.registerTrainer = async (req, res) => {
       name,
       email,
       password,
-      role: 'trainer'
+      role: 'trainer',
+      phone
     });
 
     // Create trainer profile
@@ -115,6 +117,7 @@ exports.registerTrainer = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        phone: user.phone,
         trainer: {
           id: trainer.id,
           trainingFocusId: trainer.trainingFocusId,
@@ -134,6 +137,55 @@ exports.registerTrainer = async (req, res) => {
       await user.destroy();
     }
     console.error('Registration error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.updateTrainer = async (req, res) => {
+  try {
+    const trainer = await Trainer.findByPk( req.params.id );
+    if (!trainer) {
+      return res.status(404).json({ error: 'Trainer not found' });
+    }
+
+    const { 
+      name, 
+      email, 
+      phone, 
+      trainingFocus, 
+      description, 
+      hoursOfPractice, 
+      price 
+    } = req.body;
+
+    const user = await User.findByPk(trainer.userId);
+    user.update({
+      name: name || user.name, 
+      email: email || user.email, 
+      phone: phone || user.phone
+    });
+
+    await trainer.update({
+      description : description || trainer.description,
+      hoursOfPractice: description || trainer.hoursOfPractice,
+      price: price || trainer.price,
+      picture: req.file ? 'uploads/' + req.file.filename : trainer.picture
+    });
+
+    // Remove existing training focus
+    await TrainerTrainingFocus.destroy({ where: { trainer_id: trainer.id } });
+
+    // Add new training focus
+    const trainingFocusIds = trainingFocus.map(id => ({ trainer_id: trainer.id, training_focus_id: id }));
+    await TrainerTrainingFocus.bulkCreate(trainingFocusIds);
+
+    res.json({
+      message: 'Trainer updated successfully',
+      user,
+      trainer
+    });
+  } catch (error) {
+    console.error('Error updating trainer:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };

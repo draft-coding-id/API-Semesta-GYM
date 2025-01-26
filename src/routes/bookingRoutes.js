@@ -11,6 +11,12 @@ router.get('/', auth, bookingController.getAllBookings);
 // Get booking by ID
 router.get('/:id', auth, bookingController.getBookingById);
 
+// Get booking by User ID
+router.get('/member/:id', auth, bookingController.getBookingByIdMember);
+
+// Get booking by Trainer ID
+router.get('/trainer/:id', auth, bookingController.getBookingByIdTrainer);
+
 // Create new booking
 router.post('/',
   auth,
@@ -36,7 +42,10 @@ router.put('/:id',
     body('week3Date').optional().isISO8601().withMessage('Week 3 date must be a valid date'),
     body('week3Done').optional().isBoolean().withMessage('Week 3 done must be a boolean'),
     body('week4Date').optional().isISO8601().withMessage('Week 4 date must be a valid date'),
-    body('week4Done').optional().isBoolean().withMessage('Week 4 done must be a boolean')
+    body('week4Done').optional().isBoolean().withMessage('Week 4 done must be a boolean'),
+    body('acceptedTrainer').optional().isBoolean().withMessage('Accepted trainer must be a boolean'),
+    body('done').optional().isBoolean().withMessage('Done must be a boolean'),
+    body('reasonRejection').optional().notEmpty().withMessage('Reason Rejection is required')
   ],
   bookingController.updateBooking
 );

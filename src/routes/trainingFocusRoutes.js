@@ -7,10 +7,10 @@ const upload = require('../middleware/upload');
 const router = express.Router();
 
 // Get all training focus
-router.get('/', trainingFocusController.getAllTrainingFocus);
+router.get('/', auth ,trainingFocusController.getAllTrainingFocus);
 
 // Get training focus by ID
-router.get('/:id', trainingFocusController.getTrainingFocusById);
+router.get('/:id', auth ,trainingFocusController.getTrainingFocusById);
 
 // Create new training focus (admin only)
 router.post('/',

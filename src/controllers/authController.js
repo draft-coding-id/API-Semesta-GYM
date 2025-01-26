@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, role } = req.body;
+    const { name, email, password, phone, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
@@ -28,7 +28,8 @@ exports.register = async (req, res) => {
       name,
       email,
       password,
-      role: role || 'member'
+      role: role || 'member',
+      phone
     });
 
     const token = generateToken(user.id);
@@ -40,7 +41,8 @@ exports.register = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        phone: user.phone
       }
     });
   } catch (error) {
@@ -78,7 +80,8 @@ exports.login = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        phone: user.phone
       }
     });
   } catch (error) {

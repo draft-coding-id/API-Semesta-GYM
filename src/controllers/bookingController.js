@@ -9,12 +9,12 @@ exports.getAllBookings = async (req, res) => {
         {
           model: User,
           as: 'member',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         }
       ]
     });
@@ -32,12 +32,70 @@ exports.getBookingById = async (req, res) => {
         {
           model: User,
           as: 'member',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
+        }
+      ]
+    });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    res.json(booking);
+  } catch (error) {
+    console.error('Error fetching booking:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.getBookingByIdMember = async (req, res) => {
+  try {
+    const booking = await Booking.findAll({
+      where: { memberId: req.params.id },
+      include: [
+        {
+          model: User,
+          as: 'member',
+          attributes: ['id', 'name', 'email', 'phone']
+        },
+        {
+          model: User,
+          as: 'trainer',
+          attributes: ['id', 'name', 'email', 'phone']
+        }
+      ]
+    });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    res.json(booking);
+  } catch (error) {
+    console.error('Error fetching booking:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.getBookingByIdTrainer = async (req, res) => {
+  try {
+    const booking = await Booking.findAll({
+      where: { trainerId: req.params.id },
+      include: [
+        {
+          model: User,
+          as: 'member',
+          attributes: ['id', 'name', 'email', 'phone']
+        },
+        {
+          model: User,
+          as: 'trainer',
+          attributes: ['id', 'name', 'email', 'phone']
         }
       ]
     });
@@ -83,12 +141,12 @@ exports.createBooking = async (req, res) => {
         {
           model: User,
           as: 'member',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         }
       ]
     });
@@ -123,7 +181,10 @@ exports.updateBooking = async (req, res) => {
       week3Date,
       week3Done,
       week4Date,
-      week4Done
+      week4Done,
+      acceptedTrainer,
+      done,
+      reasonRejection
     } = req.body;
 
     await booking.update({
@@ -134,7 +195,10 @@ exports.updateBooking = async (req, res) => {
       week3Date: week3Date || booking.week3Date,
       week3Done: week3Done !== undefined ? week3Done : booking.week3Done,
       week4Date: week4Date || booking.week4Date,
-      week4Done: week4Done !== undefined ? week4Done : booking.week4Done
+      week4Done: week4Done !== undefined ? week4Done : booking.week4Done,
+      acceptedTrainer: acceptedTrainer !== undefined ? acceptedTrainer : booking.acceptedTrainer,
+      done: done !== undefined ? done : booking.done,
+      reasonRejection: reasonRejection || booking.reasonRejection
     });
 
     const updatedBooking = await Booking.findByPk(booking.id, {
@@ -142,12 +206,12 @@ exports.updateBooking = async (req, res) => {
         {
           model: User,
           as: 'member',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         },
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'name', 'email', 'phone']
         }
       ]
     });

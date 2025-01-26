@@ -63,6 +63,10 @@ const Booking = sequelize.define('Booking', {
   done: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  reasonRejection: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 });
 
