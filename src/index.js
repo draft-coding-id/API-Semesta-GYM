@@ -8,6 +8,7 @@ const trainerRoutes = require('./routes/trainerRoutes');
 const trainingFocusRoutes = require('./routes/trainingFocusRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Import models for database sync
 require('./models/User');
@@ -28,6 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/trainers', trainerRoutes);
 app.use('/api/training-focus', trainingFocusRoutes);
 app.use('/api/bookings', bookingRoutes);
