@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Booking = require('../models/Booking');
 const User = require('../models/User');
+const Trainer = require('../models/Trainer');
 
 exports.getAllBookings = async (req, res) => {
   try {
@@ -14,7 +15,13 @@ exports.getAllBookings = async (req, res) => {
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email', 'phone']
+          attributes: ['id', 'name', 'email', 'phone'],
+          include: [
+            {
+              model: Trainer,
+              attributes: ['description', 'hoursOfPractice', 'price', 'picture']
+            }
+          ]
         }
       ]
     });
@@ -37,7 +44,13 @@ exports.getBookingById = async (req, res) => {
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email', 'phone']
+          attributes: ['id', 'name', 'email', 'phone'],
+          include: [
+            {
+              model: Trainer,
+              attributes: ['description', 'hoursOfPractice', 'price', 'picture']
+            }
+          ]
         }
       ]
     });
@@ -66,7 +79,13 @@ exports.getBookingByIdMember = async (req, res) => {
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email', 'phone']
+          attributes: ['id', 'name', 'email', 'phone'],
+          include: [
+            {
+              model: Trainer,
+              attributes: ['description', 'hoursOfPractice', 'price', 'picture']
+            }
+          ]
         }
       ]
     });
@@ -95,7 +114,13 @@ exports.getBookingByIdTrainer = async (req, res) => {
         {
           model: User,
           as: 'trainer',
-          attributes: ['id', 'name', 'email', 'phone']
+          attributes: ['id', 'name', 'email', 'phone'],
+          include: [
+            {
+              model: Trainer,
+              attributes: ['description', 'hoursOfPractice', 'price', 'picture']
+            }
+          ]
         }
       ]
     });
