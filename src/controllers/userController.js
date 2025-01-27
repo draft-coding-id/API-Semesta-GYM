@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { validationResult } = require('express-validator');
 const UserMembership = require('../models/UserMembership');
 const Membership = require('../models/Membership');
+const Course = require('../models/Course');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -10,11 +11,15 @@ exports.getAllUsers = async (req, res) => {
       include: [
         {
           model: UserMembership,
-          attributes: ['membershipId', 'startDate', 'endDate'],
+          attributes: ['id', 'userId', 'membershipId', 'startDate', 'endDate'],
           include: {
             model: Membership,
             attributes: ['name', 'description', 'price']
           }
+        },
+        {
+          model: Course,
+          attributes: ['id', 'userId', 'price', 'startDate', 'endDate']
         }
       ]
     });
@@ -32,11 +37,15 @@ exports.getUserById = async (req, res) => {
       include: [
         {
           model: UserMembership,
-          attributes: ['membershipId', 'startDate', 'endDate'],
+          attributes: ['id', 'userId', 'membershipId', 'startDate', 'endDate'],
           include: {
             model: Membership,
             attributes: ['name', 'description', 'price']
           }
+        },
+        {
+          model: Course,
+          attributes: ['id', 'userId', 'price', 'startDate', 'endDate']
         }
       ]
     });

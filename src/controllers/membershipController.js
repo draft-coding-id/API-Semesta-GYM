@@ -121,16 +121,65 @@ exports.assignMembership = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    await UserMembership.create({
+    const userMembership = await UserMembership.create({
       userId,
       membershipId,
       startDate,
       endDate
     });
 
-    res.json({ message: 'Membership assigned successfully' });
+    res.json({ 
+      message: 'Membership assigned successfully',
+      data: userMembership
+    });
   } catch (error) {
     console.error('Error assigning membership:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+exports.updateMembershipAssignment = async (req, res) => {
+  try {
+    const { 
+      userId,
+      membershipId, 
+      startDate,
+      endDate
+    } = req.body;
+
+    const userMembership = await UserMembership.findByPk(req.params.id);
+    
+    if (!userMembership) {
+      return res.status(404).json({ error: 'Membership assignment not found' });
+    }
+
+    userMembership.userId = userId || userMembership.userId;
+    userMembership.membershipId = membershipId || userMembership.membershipId;
+    userMembership.startDate = startDate || userMembership.startDate;
+    userMembership.endDate = endDate || userMembership.endDate;
+
+    await userMembership.save();
+
+    res.json({ 
+      message: 'Membership assignment updated successfully',
+      data: userMembership
+    });
+  } catch (error) {
+    console.error('Error updating membership assignment:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+exports.getMembershipByUserId = async (req, res) => {
+  try {
+    const userMemberships = await UserMembership.findAll({
+      where: { userId: req.params.id },
+      include: Membership
+    });
+
+    res.json(userMemberships);
+  } catch (error) {
+    console.error('Error fetching membership assignments:', error);
     res.status(500).json({ error: 'Server error' });
   }
 }

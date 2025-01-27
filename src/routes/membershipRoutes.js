@@ -37,7 +37,7 @@ router.put('/:id',
 router.delete('/:id', auth, membershipController.deleteMembership);
 
 // Assign membership to user
-router.post('/assign', 
+router.post('/register', 
   auth, 
   [
     body('userId').notEmpty().withMessage('User ID is required'),
@@ -45,6 +45,20 @@ router.post('/assign',
     body('startDate').isISO8601().withMessage('Start date must be a valid date'),
     body('endDate').isISO8601().withMessage('End date must be a valid date')
   ],
-  membershipController.assignMembership);
+  membershipController.assignMembership
+);
+
+router.put('/register/:id', 
+  auth, 
+  [
+    body('userId').optional().notEmpty().withMessage('User ID is required'),
+    body('membershipId').optional().notEmpty().withMessage('Membership ID is required'),
+    body('startDate').optional().isISO8601().withMessage('Start date must be a valid date'),
+    body('endDate').optional().isISO8601().withMessage('End date must be a valid date')
+  ],
+  membershipController.updateMembershipAssignment
+);
+
+router.get('/user/:id', auth, membershipController.getMembershipByUserId);
 
 module.exports = router;
