@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const TrainerTrainingFocus = require('../models/TrainerTrainingFocus');
 const { use } = require('../routes/authRoutes');
+const Review = require('../models/Review');
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -23,6 +24,14 @@ exports.getAllTrainers = async (req, res) => {
         {
           model: TrainingFocus,
           attributes: ['id', 'name', 'picture']
+        },
+        {
+          model: Review,
+          attributes: ['rating', 'comment'],
+          include: [{
+            model: User,
+            attributes: ['name']
+          }]
         }
       ]
     });
@@ -45,6 +54,14 @@ exports.getTrainerById = async (req, res) => {
         {
           model: TrainingFocus,
           attributes: ['id', 'name', 'picture']
+        },
+        {
+          model: Review,
+          attributes: ['rating', 'comment'],
+          include: [{
+            model: User,
+            attributes: ['name']
+          }]
         }
       ]
     });
