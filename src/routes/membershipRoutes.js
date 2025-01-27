@@ -36,4 +36,15 @@ router.put('/:id',
 // Delete a membership by ID
 router.delete('/:id', auth, membershipController.deleteMembership);
 
+// Assign membership to user
+router.post('/assign', 
+  auth, 
+  [
+    body('userId').notEmpty().withMessage('User ID is required'),
+    body('membershipId').notEmpty().withMessage('Membership ID is required'),
+    body('startDate').isISO8601().withMessage('Start date must be a valid date'),
+    body('endDate').isISO8601().withMessage('End date must be a valid date')
+  ],
+  membershipController.assignMembership);
+
 module.exports = router;

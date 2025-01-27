@@ -1,10 +1,22 @@
 const User = require('../models/User');
 const { validationResult } = require('express-validator');
+const UserMembership = require('../models/UserMembership');
+const Membership = require('../models/Membership');
 
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      attributes: ['id', 'name', 'email', 'role', 'phone']
+      attributes: ['id', 'name', 'email', 'role', 'phone'],
+      include: [
+        {
+          model: UserMembership,
+          attributes: ['membershipId', 'startDate', 'endDate'],
+          include: {
+            model: Membership,
+            attributes: ['name', 'description', 'price']
+          }
+        }
+      ]
     });
 
     res.json(users);
@@ -16,7 +28,17 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id, {
-      attributes: ['id', 'name', 'email', 'role', 'phone']
+      attributes: ['id', 'name', 'email', 'role', 'phone'],
+      include: [
+        {
+          model: UserMembership,
+          attributes: ['membershipId', 'startDate', 'endDate'],
+          include: {
+            model: Membership,
+            attributes: ['name', 'description', 'price']
+          }
+        }
+      ]
     });
 
     if (!user) {

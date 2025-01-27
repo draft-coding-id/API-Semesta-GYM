@@ -19,6 +19,7 @@ require('./models/TrainerTrainingFocus');
 require('./models/Booking');
 require('./models/Review');
 require('./models/Membership');
+require('./models/UserMembership');
 
 const app = express();
 

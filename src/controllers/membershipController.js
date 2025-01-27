@@ -1,5 +1,7 @@
 const { validationResult } = require('express-validator');
 const Membership = require('../models/Membership');
+const User = require('../models/User');
+const UserMembership = require('../models/UserMembership');
 
 exports.createMembership = async (req, res) => {
   try {
@@ -96,6 +98,39 @@ exports.deleteMembership = async (req, res) => {
     res.json({ message: 'Membership deleted successfully' });
   } catch (error) {
     console.error('Error deleting membership:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+exports.assignMembership = async (req, res) => {
+  try {
+    const { 
+      userId,
+      membershipId, 
+      startDate,
+      endDate
+    } = req.body;
+
+    const membership = await Membership.findByPk(membershipId);
+    if (!membership) {
+      return res.status(404).json({ error: 'Membership not found' });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await UserMembership.create({
+      userId,
+      membershipId,
+      startDate,
+      endDate
+    });
+
+    res.json({ message: 'Membership assigned successfully' });
+  } catch (error) {
+    console.error('Error assigning membership:', error);
     res.status(500).json({ error: 'Server error' });
   }
 }
