@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const TrainerTrainingFocus = require('../models/TrainerTrainingFocus');
 const { use } = require('../routes/authRoutes');
 const Review = require('../models/Review');
-const bcrypt = require('bcryptjs');
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -177,17 +176,11 @@ exports.updateTrainer = async (req, res) => {
       price 
     } = req.body;
 
-    // hash password
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      req.body.password = await bcrypt.hash(password, salt);
-    }
-
     const user = await User.findByPk(trainer.userId);
     user.update({
       name: name || user.name, 
       email: email || user.email, 
-      password: req.body.password || user.password,
+      password: password || user.password,
       phone: phone || user.phone
     });
 

@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const UserMembership = require('../models/UserMembership');
 const Membership = require('../models/Membership');
 const Course = require('../models/Course');
-const bcrypt = require('bcryptjs');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -75,18 +74,12 @@ exports.update = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // hash password
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      req.body.password = await bcrypt.hash(password, salt);
-    }
-
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.password = req.body.password || user.password;
-    user.phone = phone || user.phone;
-
-    await user.save();
+    user.update({
+      name: name || user.name,
+      email: email || user.email,
+      password: password || user.password,
+      phone: phone || user.phone
+    });
 
     res.json({
       message: 'User updated successfully',
