@@ -11,6 +11,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const userRoutes = require('./routes/userRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Import models for database sync
 require('./models/User');
@@ -22,6 +23,7 @@ require('./models/Review');
 require('./models/Membership');
 require('./models/UserMembership');
 require('./models/Course');
+require('./models/Payment');
 
 const app = express();
 
@@ -41,6 +43,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/memberships', membershipRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
