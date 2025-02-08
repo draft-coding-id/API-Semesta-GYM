@@ -24,6 +24,7 @@ require('./models/Membership');
 require('./models/UserMembership');
 require('./models/Course');
 require('./models/Payment');
+require('./models/DataCourse');
 
 const app = express();
 

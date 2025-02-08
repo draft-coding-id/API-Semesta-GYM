@@ -7,7 +7,7 @@ const upload = require('../middleware/upload');
 const router = express.Router();
 
 // Get all training focus
-router.get('/', auth ,trainingFocusController.getAllTrainingFocus);
+router.get('/', trainingFocusController.getAllTrainingFocus);
 
 // Get training focus by ID
 router.get('/:id', auth ,trainingFocusController.getTrainingFocusById);

@@ -43,4 +43,7 @@ router.post('/course',
 // Get Payment by User ID
 router.get('/user/:id', auth, paymentController.getPaymentByUserId);
 
+// Get All Payments
+router.get('/', auth, paymentController.getAllPayments);
+
 module.exports = router;

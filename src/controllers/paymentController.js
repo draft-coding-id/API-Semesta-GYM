@@ -94,9 +94,50 @@ exports.createPaymentCourse = async (req, res) => {
 }
 
 exports.getPaymentByUserId = async (req, res) => {
+  const errors = validationResult(req);
   try {
     const payments = await Payment.findAll({
       where: { userId: req.params.id },
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+        {
+          model: Booking,
+          as: 'booking',
+        },
+        {
+          model: UserMembership,
+          as: 'userMembership',
+          include: Membership
+        },
+        {
+          model: Course,
+          as: 'course',
+        },
+      ],
+    });
+
+    const result = payments.map(payment => {
+      const paymentable = payment.paymentable.toJSON();
+      return {
+        ...payment.toJSON(),
+        paymentable,
+      };
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+exports.getAllPayments = async (req, res) => {
+  const errors = validationResult(req);
+  try {
+    const payments = await Payment.findAll({
       include: [
         {
           model: User,

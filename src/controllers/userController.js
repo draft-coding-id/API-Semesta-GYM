@@ -11,7 +11,7 @@ exports.getAllUsers = async (req, res) => {
       include: [
         {
           model: UserMembership,
-          attributes: ['id', 'userId', 'membershipId', 'startDate', 'endDate'],
+          attributes: ['id', 'userId', 'membershipId', 'startDate', 'endDate', 'createdAt'],
           include: {
             model: Membership,
             attributes: ['name', 'description', 'price']
@@ -19,7 +19,7 @@ exports.getAllUsers = async (req, res) => {
         },
         {
           model: Course,
-          attributes: ['id', 'userId', 'price', 'startDate', 'endDate']
+          attributes: ['id', 'userId', 'price', 'startDate', 'endDate', 'createdAt']
         }
       ]
     });
