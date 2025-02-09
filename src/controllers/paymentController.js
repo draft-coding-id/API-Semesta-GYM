@@ -95,6 +95,9 @@ exports.createPaymentCourse = async (req, res) => {
 
 exports.getPaymentByUserId = async (req, res) => {
   const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const payments = await Payment.findAll({
       where: { userId: req.params.id },
@@ -136,6 +139,9 @@ exports.getPaymentByUserId = async (req, res) => {
 
 exports.getAllPayments = async (req, res) => {
   const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const payments = await Payment.findAll({
       include: [

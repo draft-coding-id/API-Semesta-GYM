@@ -45,4 +45,6 @@ router.put('/:id',
   trainerController.updateTrainer
 );
 
+router.delete('/:id', auth, trainerController.deleteTrainer);
+
 module.exports = router;

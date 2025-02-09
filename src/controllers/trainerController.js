@@ -208,3 +208,21 @@ exports.updateTrainer = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+exports.deleteTrainer = async (req, res) => {
+  try {
+    const trainer = await Trainer.findByPk(req.params.id);
+    if (!trainer) {
+      return res.status(404).json({ error: 'Trainer not found' });
+    }
+
+    const user = await User.findByPk(trainer.userId);
+    await trainer.destroy();
+    await user.destroy();
+
+    res.json({ message: 'Trainer deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting trainer:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
