@@ -61,4 +61,5 @@ router.put('/register/:id',
 
 router.get('/user/:id', auth, membershipController.getMembershipByUserId);
 
+router.delete('/register/:id', auth, membershipController.removeMembershipAssignment);
 module.exports = router;

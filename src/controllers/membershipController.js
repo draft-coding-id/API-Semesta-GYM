@@ -183,3 +183,19 @@ exports.getMembershipByUserId = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 }
+
+exports.removeMembershipAssignment = async (req, res) => {
+  try {
+    const userMembership = await UserMembership.findByPk(req.params.id);
+    if (!userMembership) {
+      return res.status(404).json({ error: 'Membership assignment not found' });
+    }
+
+    await userMembership.destroy();
+
+    res.json({ message: 'Membership assignment removed successfully' });
+  } catch (error) {
+    console.error('Error removing membership assignment:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}

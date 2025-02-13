@@ -30,7 +30,10 @@ const UserMembership = sequelize.define('UserMembership', {
   }
 });
 
-UserMembership.belongsTo(User, { foreignKey: 'userId' });
+UserMembership.belongsTo(User, { 
+  foreignKey: 'userId',
+  onDelete: 'CASCADE'
+});
 User.hasMany(UserMembership, { foreignKey: 'userId' });
 
 UserMembership.belongsTo(Membership, { foreignKey: 'membershipId' });

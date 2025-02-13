@@ -29,6 +29,16 @@ router.put('/user/:userId',
   courseController.updateCourseByUserId
 );
 
+router.put('/:id', 
+  auth, 
+  [
+    body('price').optional().notEmpty().withMessage('Price is required'),
+    body('startDate').optional().isISO8601().withMessage('Start date must be a valid date'),
+    body('endDate').optional().isISO8601().withMessage('End date must be a valid date')
+  ],  
+  courseController.updateCourseById
+);
+
 // Delete a course by ID
 router.delete('/:id', auth, courseController.deleteCourse);
 

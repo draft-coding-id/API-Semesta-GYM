@@ -64,6 +64,37 @@ exports.updateCourseByUserId = async (req, res) => {
   }
 }
 
+exports.updateCourseById = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { price, startDate, endDate } = req.body;
+
+    const course = await Course.findByPk(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+
+    course.price = price || course.price;
+    course.startDate = startDate || course.startDate;
+    course.endDate = endDate || course.endDate;
+
+    await course.save();
+
+    res.json({
+      message: 'Course updated successfully',
+      data: course
+    });
+  } catch (error) {
+    console.error('Error updating course:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
 exports.deleteCourse = async (req, res) => {
   try {
     const course = await Course.findByPk(req.params.id);

@@ -25,7 +25,10 @@ const Course = sequelize.define('Course', {
   }
 });
 
-Course.belongsTo(User, { foreignKey: 'userId' });
+Course.belongsTo(User, { 
+  foreignKey: 'userId',
+  onDelete: 'CASCADE'
+});
 User.hasMany(Course, { foreignKey: 'userId' });
 
 module.exports = Course;

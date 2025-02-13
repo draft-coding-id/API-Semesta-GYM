@@ -18,4 +18,6 @@ router.put('/:id/update', auth, [
   body('phone').optional().isMobilePhone().withMessage('Please enter a valid phone number')
 ], userController.update);
 
+router.delete('/:id/delete', auth, userController.delete);
+
 module.exports = router;
