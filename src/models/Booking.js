@@ -56,6 +56,10 @@ const Booking = sequelize.define('Booking', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  endDate: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
   acceptedTrainer: {
     type: DataTypes.BOOLEAN,
     defaultValue: false

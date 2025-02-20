@@ -212,6 +212,13 @@ exports.updateBooking = async (req, res) => {
       reasonRejection
     } = req.body;
 
+    let endDate = null;
+    if (acceptedTrainer === true) {
+      // end date = now + 30 days
+      endDate = new Date();
+      endDate.setDate(endDate.getDate() + 30);
+    }
+
     await booking.update({
       week1Date: week1Date || booking.week1Date,
       week1Done: week1Done !== undefined ? week1Done : booking.week1Done,
@@ -221,6 +228,7 @@ exports.updateBooking = async (req, res) => {
       week3Done: week3Done !== undefined ? week3Done : booking.week3Done,
       week4Date: week4Date || booking.week4Date,
       week4Done: week4Done !== undefined ? week4Done : booking.week4Done,
+      endDate,
       acceptedTrainer: acceptedTrainer !== undefined ? acceptedTrainer : booking.acceptedTrainer,
       done: done !== undefined ? done : booking.done,
       reasonRejection: reasonRejection || booking.reasonRejection
