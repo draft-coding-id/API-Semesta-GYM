@@ -31,6 +31,11 @@ Payment.init({
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
+  paymentStatus: {
+    type: DataTypes.ENUM('pending', 'success', 'failed'),
+    allowNull: false,
+    defaultValue: 'pending'
+  },
   paidAt: {
     type: DataTypes.DATE,
     allowNull: false

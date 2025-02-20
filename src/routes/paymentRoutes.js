@@ -12,7 +12,8 @@ router.post('/booking',
     body('bookingId').notEmpty().withMessage('Booking ID is required'),
     body('amount').notEmpty().withMessage('Amount is required'),
     body('paidAt').isISO8601().withMessage('Payment date must be a valid date'),
-    body('userId').notEmpty().withMessage('User ID is required')
+    body('userId').notEmpty().withMessage('User ID is required'),
+    body('paymentStatus').isIn(['pending', 'success', 'failed']).withMessage('Payment status must be either pending, success, or failed')
   ],
   paymentController.createPaymentBooking
 );
@@ -24,7 +25,8 @@ router.post('/membership',
     body('userMembershipId').notEmpty().withMessage('User Membership ID is required'),
     body('amount').notEmpty().withMessage('Amount is required'),
     body('paidAt').isISO8601().withMessage('Payment date must be a valid date'),
-    body('userId').notEmpty().withMessage('User ID is required')
+    body('userId').notEmpty().withMessage('User ID is required'),
+    body('paymentStatus').isIn(['pending', 'success', 'failed']).withMessage('Payment status must be either pending, success, or failed')
   ],
   paymentController.createPaymentUserMembership
 );
@@ -35,7 +37,8 @@ router.post('/course',
     body('courseId').notEmpty().withMessage('Course ID is required'),
     body('amount').notEmpty().withMessage('Amount is required'),
     body('paidAt').isISO8601().withMessage('Payment date must be a valid date'),
-    body('userId').notEmpty().withMessage('User ID is required')
+    body('userId').notEmpty().withMessage('User ID is required'),
+    body('paymentStatus').isIn(['pending', 'success', 'failed']).withMessage('Payment status must be either pending, success, or failed')
   ],
   paymentController.createPaymentCourse
 );

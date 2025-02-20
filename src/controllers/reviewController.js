@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const Review = require('../models/Review');
+const Trainer = require('../models/Trainer');
 
 exports.getReviews = async (req, res) => {
   try {
@@ -34,6 +35,22 @@ exports.createReview = async (req, res) => {
       rating,
       comment,
     });
+
+    const trainerRating = await Review.findAll({
+      where: { trainerId },
+      attributes: ['rating'],
+    });
+
+    let totalRating = 0;
+    trainerRating.forEach((rating) => {
+      totalRating += rating.rating;
+    });
+
+    const avgRating = totalRating / trainerRating.length;
+
+    const trainer = await Trainer.findByPk(trainerId);
+    trainer.rating = avgRating;
+    await trainer.save();
 
     res.status(201).json(review);
   } catch (error) {

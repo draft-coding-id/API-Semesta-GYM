@@ -32,6 +32,11 @@ const Trainer = sequelize.define('Trainer', {
   picture: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  rating: {
+    type: DataTypes.DECIMAL(2, 1),
+    allowNull: true,
+    defaultValue: 0
   }
 });
 

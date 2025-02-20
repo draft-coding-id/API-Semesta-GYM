@@ -22,7 +22,8 @@ exports.createPaymentBooking = async (req, res) => {
       title: 'Booking payment',
       amount: req.body.amount,
       paidAt: req.body.paidAt,
-      userId: req.body.userId
+      userId: req.body.userId,
+      paymentStatus: req.body.payment
     })
 
     res.status(201).json({
@@ -51,7 +52,8 @@ exports.createPaymentUserMembership = async (req, res) => {
       title: 'Membership payment',
       amount: req.body.amount,
       paidAt: req.body.paidAt,
-      userId: req.body.userId
+      userId: req.body.userId,
+      paymentStatus: req.body.payment
     })
 
     res.status(201).json({
@@ -80,7 +82,8 @@ exports.createPaymentCourse = async (req, res) => {
       title: 'Course payment',
       amount: req.body.amount,
       paidAt: req.body.paidAt,
-      userId: req.body.userId
+      userId: req.body.userId,
+      paymentStatus: req.body.payment
     })
 
     res.status(201).json({
