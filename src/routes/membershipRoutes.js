@@ -11,7 +11,8 @@ router.post('/',
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('price').notEmpty().withMessage('Price is required'),
-    body('description').notEmpty().withMessage('Description is required')
+    body('description').notEmpty().withMessage('Description is required'),
+    body('duration').optional().isInt().withMessage('Duration must be an integer')
   ],
   membershipController.createMembership
 );
@@ -28,7 +29,8 @@ router.put('/:id',
   [
     body('name').optional().notEmpty().withMessage('Name is required'),
     body('price').optional().notEmpty().withMessage('Price is required'),
-    body('description').optional().notEmpty().withMessage('Description is required')
+    body('description').optional().notEmpty().withMessage('Description is required'),
+    body('duration').optional().isInt().withMessage('Duration must be an integer')
   ],  
   membershipController.updateMembership
 );

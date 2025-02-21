@@ -18,6 +18,11 @@ const Membership = sequelize.define('Membership', {
   description: {
     type: DataTypes.TEXT,
     allowNull: false
+  },
+  duration: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 30
   }
 });
 

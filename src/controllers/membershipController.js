@@ -10,12 +10,13 @@ exports.createMembership = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, description, price } = req.body;
+    const { name, description, price, duration } = req.body;
 
     const membership = await Membership.create({
       name,
       description,
       price,
+      duration
     });
 
     res.status(201).json(membership);
@@ -58,7 +59,7 @@ exports.updateMembership = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, description, price } = req.body;
+    const { name, description, price, duration } = req.body;
 
     const membership = await Membership.findByPk(req.params.id);
     if (!membership) {
@@ -68,6 +69,7 @@ exports.updateMembership = async (req, res) => {
     membership.name = name || membership.name;
     membership.description = description || membership.description;
     membership.price = price || membership.price;
+    membership.duration = duration || membership.duration
 
     await membership.save();
 
@@ -78,6 +80,7 @@ exports.updateMembership = async (req, res) => {
         name: membership.name,
         description: membership.description,
         price: membership.price,
+        duration: membership.duration
       }
     });
   } catch (error) {
