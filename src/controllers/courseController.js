@@ -114,7 +114,7 @@ exports.deleteCourse = async (req, res) => {
 
 exports.getCourseByUserId = async (req, res) => {
   try {
-    const course = await Course.findOne({
+    const course = await Course.findAll({
       where: {
         userId: req.params.userId
       }
