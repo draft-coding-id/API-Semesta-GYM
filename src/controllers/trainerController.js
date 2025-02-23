@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const TrainerTrainingFocus = require('../models/TrainerTrainingFocus');
 const { use } = require('../routes/authRoutes');
 const Review = require('../models/Review');
+const bcrypt = require('bcryptjs');
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -180,9 +181,14 @@ exports.updateTrainer = async (req, res) => {
     user.update({
       name: name || user.name, 
       email: email || user.email, 
-      password: password || user.password,
       phone: phone || user.phone
     });
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+      await user.save();
+    }
 
     await trainer.update({
       description : description || trainer.description,
