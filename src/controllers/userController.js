@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const UserMembership = require('../models/UserMembership');
 const Membership = require('../models/Membership');
 const Course = require('../models/Course');
+const bcrypt = require('bcryptjs');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -77,9 +78,14 @@ exports.update = async (req, res) => {
     user.update({
       name: name || user.name,
       email: email || user.email,
-      password: password || user.password,
       phone: phone || user.phone
     });
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+      await user.save();
+    }
 
     res.json({
       message: 'User updated successfully',
