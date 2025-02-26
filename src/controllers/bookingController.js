@@ -68,7 +68,7 @@ exports.getBookingById = async (req, res) => {
 
 exports.getBookingByIdMember = async (req, res) => {
   try {
-    const booking = await Booking.findAll({
+    const bookings = await Booking.findAll({
       where: { memberId: req.params.id },
       include: [
         {
@@ -83,18 +83,30 @@ exports.getBookingByIdMember = async (req, res) => {
           include: [
             {
               model: Trainer,
-              attributes: ['description', 'hoursOfPractice', 'price', 'picture']
+              attributes: ['id', 'description', 'hoursOfPractice', 'price', 'picture']
             }
           ]
         }
       ]
     });
 
-    if (!booking) {
+    const modifiedBookings = bookings.map(booking => {
+      const trainer = booking.trainer;
+      const trainerId = trainer.Trainer ? trainer.Trainer.id : null;
+      return {
+      ...booking.toJSON(),
+      trainer: {
+        ...trainer.toJSON(),
+        trainerId
+      }
+      };
+    });
+    
+    if (!modifiedBookings) {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    res.json(booking);
+    res.json(modifiedBookings);
   } catch (error) {
     console.error('Error fetching booking:', error);
     res.status(500).json({ error: 'Server error' });
