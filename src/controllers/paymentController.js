@@ -126,7 +126,7 @@ exports.getPaymentByUserId = async (req, res) => {
     });
 
     const result = payments.map(payment => {
-      const paymentable = payment.paymentable.toJSON();
+      const paymentable = payment.paymentable ? payment.paymentable.toJSON() : null;
       return {
         ...payment.toJSON(),
         paymentable,
@@ -169,7 +169,7 @@ exports.getAllPayments = async (req, res) => {
     });
 
     const result = payments.map(payment => {
-      const paymentable = payment.paymentable.toJSON();
+      const paymentable = payment.paymentable ? payment.paymentable.toJSON() : null;
       return {
         ...payment.toJSON(),
         paymentable,
