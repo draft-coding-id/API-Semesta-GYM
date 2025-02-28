@@ -224,8 +224,8 @@ exports.updateBooking = async (req, res) => {
       reasonRejection
     } = req.body;
 
-    let endDate = null;
-    if (acceptedTrainer === true) {
+    let endDate = booking.endDate;
+    if (acceptedTrainer === true && endDate === null) {
       // end date = now + 30 days
       endDate = new Date();
       endDate.setDate(endDate.getDate() + 30);
