@@ -16,20 +16,36 @@
 
 ```bash
   npm install
-  npm run dev
 ```
     
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`DB_CONNECTION`
+`NODE_ENV` development/test/production
 
-`DB_HOST`
+`MAIL_HOST`
+`MAIL_PORT`
+`MAIL_USER`
+`MAIL_PASSWORD`
+`MAIL_FROM`
 
-`DB_USER`
+## Setting Database
+go to ```config/config.json``` setting valiable 
+```
+"username": "",
+"password": ,
+"database": "",
+"host": "",
+"dialect": "mysql"
+```
 
-`DB_PASSWORD`
-
-`DB_NAME`
-
+## Seed Data
+seeding data
+```bash
+npx sequelize-cli db:seed:all
+```
+## Run
+```bash
+  npm run dev
+```
