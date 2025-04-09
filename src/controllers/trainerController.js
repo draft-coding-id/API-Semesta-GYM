@@ -14,6 +14,37 @@ const generateToken = (userId) => {
   });
 };
 
+exports.getTopTrainers = async (req, res) => {
+  try {
+    const trainers = await Trainer.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'email', 'phone']
+        },
+        {
+          model: TrainingFocus,
+          attributes: ['id', 'name', 'picture']
+        },
+        {
+          model: Review,
+          attributes: ['rating', 'comment'],
+          include: [{
+            model: User,
+            attributes: ['name']
+          }]
+        }
+      ],
+      order: [[{ model: Review }, 'rating', 'DESC']],
+      limit: 3
+    });
+    res.json(trainers);
+  } catch (error) {
+    console.error('Error fetching top trainers:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 exports.getAllTrainers = async (req, res) => {
   try {
     const trainers = await Trainer.findAll({

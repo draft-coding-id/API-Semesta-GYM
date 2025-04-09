@@ -7,6 +7,7 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+router.get('/top-trainers', trainerController.getTopTrainers);
 // Get all trainers
 router.get('/', auth, trainerController.getAllTrainers);
 
