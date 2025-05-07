@@ -243,7 +243,8 @@ exports.updateBooking = async (req, res) => {
       endDate,
       acceptedTrainer: acceptedTrainer !== undefined ? acceptedTrainer : booking.acceptedTrainer,
       done: done !== undefined ? done : booking.done,
-      reasonRejection: reasonRejection || booking.reasonRejection
+      /* reasonRejection: reasonRejection || booking.reasonRejection */
+      reasonRejection: reasonRejection === undefined ? booking.reasonRejection : reasonRejection
     });
 
     const updatedBooking = await Booking.findByPk(booking.id, {

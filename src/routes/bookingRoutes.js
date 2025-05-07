@@ -45,7 +45,8 @@ router.put('/:id',
     body('week4Done').optional().isBoolean().withMessage('Week 4 done must be a boolean'),
     body('acceptedTrainer').optional().isBoolean().withMessage('Accepted trainer must be a boolean'),
     body('done').optional().isBoolean().withMessage('Done must be a boolean'),
-    body('reasonRejection').optional().notEmpty().withMessage('Reason Rejection is required')
+    /* body('reasonRejection').optional().notEmpty().withMessage('Reason Rejection is required') */
+    body('reasonRejection').optional({ nullable: true})
   ],
   bookingController.updateBooking
 );
